@@ -15,6 +15,8 @@ class DataSource_Comments_Document extends Datasource_Document {
 		'ds_id' => 0,
 		'parent_id' => 0,
 		'document_id' => 0,
+		'page_url' => '',
+		'page_title' => '',
 		'author' => NULL,
 		'author_email' => NULL,
 		'author_url' => NULL,
@@ -93,5 +95,63 @@ class DataSource_Comments_Document extends Datasource_Document {
 				array('url')
 			)
 		);
+	}
+	
+	/**
+	 * 
+	 * @return string
+	 */
+	public function author()
+	{
+		$user_id = $this->user_id;
+		$author_name = $this->author;
+		$author_email = $this->author_email;
+		$author_url = $this->author_url;
+
+		if (!empty($user_id) AND isset($this->user_name))
+		{
+			return HTML::anchor(Route::get('backend')->uri(array(
+				'controller' => 'users',
+				'action' => 'profile',
+				'id' => $user_id
+			)), $this->user_name);
+		}
+		else if (!empty($author_name))
+		{
+			if (!empty($author_email))
+			{
+				return HTML::mailto($author_email, $author_name);
+			}
+			else if(!empty($author_url))
+			{
+				return HTML::anchor($author_url, $author_name);
+			}
+		}
+		
+		return 'Undefined';
+	}
+	
+	public function source()
+	{
+		$page_title = $this->page_title;
+		$page_url = $this->page_url;
+
+		if (isset($this->ds_source) AND isset($this->document_name))
+		{
+			return HTML::anchor(Route::get('datasources')->uri(array(
+				'controller' => 'document',
+				'directory' => $this->ds_source->type(),
+				'action' => 'view'
+			)) . URL::query(array(
+				'ds_id' => $this->ds_source->id(), 
+				'id' => $this->document_id
+			)), $this->document_name) . ' (' . HTML::anchor(Datasource_Section::uri('view', $this->ds_source->id()), $this->ds_source->name) . ')';
+		}
+		else if (!empty($page_url))
+		{
+			return HTML::anchor($page_url, $page_title);
+		}
+		
+		return 'Undefined';
 	}
 }

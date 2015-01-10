@@ -3,6 +3,8 @@ CREATE TABLE IF NOT EXISTS `__TABLE_PREFIX__dscomments` (
   `parent_id` bigint(20) unsigned NOT NULL DEFAULT '0',
   `ds_id` int(11) unsigned NOT NULL,
   `document_id` int(11) unsigned NOT NULL DEFAULT '0',
+  `page_url` tinytext DEFAULT '',
+  `page_title` varchar(255) DEFAULT '',
   `author` tinytext NOT NULL,
   `author_email` varchar(100) NOT NULL DEFAULT '',
   `author_url` varchar(200) NOT NULL DEFAULT '',
